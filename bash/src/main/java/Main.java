@@ -23,7 +23,11 @@ public class Main {
             } catch (final BashParseException e) {
                 System.err.println(e.getMessage());
             } catch (final CommandExecutionException e) {
-                System.err.println("Execution error");
+                String message = "Execution error";
+                if (e.getCause().getMessage() != null) {
+                    message = e.getCause().getMessage();
+                }
+                System.err.println(message);
             }
         }
     }

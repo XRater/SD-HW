@@ -39,7 +39,7 @@ class SystemCommandUnit implements CommandUnit {
         } catch (final IOException | InterruptedException e) {
             return CommandResultFactory.createUnsuccessfulCommandResult(e);
         }
-        return CommandResultFactory.createSuccessfulCommandResult(result);
+        return CommandResultFactory.createSuccessfulCommandResult(result + '\n');
     }
 
     @Override
