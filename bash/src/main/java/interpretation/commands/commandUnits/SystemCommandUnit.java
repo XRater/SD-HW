@@ -15,7 +15,7 @@ class SystemCommandUnit implements CommandUnit {
         if (args.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        this.args = args.subList(0, args.size());
+        this.args = args;
     }
 
     @Override

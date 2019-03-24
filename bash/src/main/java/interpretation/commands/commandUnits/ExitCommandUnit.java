@@ -4,7 +4,6 @@ import interpretation.commands.commandResult.CommandResult;
 import interpretation.commands.commandResult.CommandResultFactory;
 
 import java.util.List;
-import java.util.StringJoiner;
 
 class ExitCommandUnit implements CommandUnit {
 

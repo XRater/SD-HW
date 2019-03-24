@@ -46,7 +46,7 @@ public class BashParser {
             if (unitCommands.size() == 1) {
                 return parseToAssignment(input, scope);
             } else {
-                throw new BashParseException();
+                throw new BashParseException("Chaining assignment command is forbidden");
             }
         } else {
             final CommandInstruction commandInstruction = InstructionFactory.createCommandInstruction();
@@ -73,15 +73,7 @@ public class BashParser {
     }
 
     private static boolean checkInstructionForAssignment(final @NotNull String input) {
-        for (final var c : input.toCharArray()) {
-            if (c == '=') {
-                return input.indexOf("=") != 0;
-            }
-            if (c == '\'' || c == '\"' || c == '$') {
-                return false;
-            }
-        }
-        return false;
+        return input.matches("^[^\'\"=$][^\'\"$]*=.*$");
     }
 
     @NotNull
@@ -141,7 +133,7 @@ public class BashParser {
             stringBuilder.append(scope.get(variable.toString()));
         }
         if (quote != null) {
-            throw new BashParseException();
+            throw new BashParseException("Unpaired quote was found");
         }
         return stringBuilder.toString();
     }
@@ -170,10 +162,8 @@ public class BashParser {
                     }
                     continue;
                 }
-            } else {
-                if (c == quote) {
-                    quote = null;
-                }
+            } else if (c == quote) {
+                quote = null;
             }
             sb.append(c);
         }

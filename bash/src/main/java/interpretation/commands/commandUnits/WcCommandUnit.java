@@ -39,11 +39,11 @@ class WcCommandUnit implements CommandUnit {
         final File file = new File(actualFile);
         try {
             final String content =  FileUtils.readFileToString(file, (String) null);
-            final int bytesNumber = content.length();
-            final int wordsNumber = content.split(" ").length;
             final int linesNumber = content.split("\n").length;
+            final int wordsNumber = content.split("\\s").length;
+            final long bytesNumber = file.length();
             return CommandResultFactory.createSuccessfulCommandResult(
-                bytesNumber + " " + wordsNumber + " " + linesNumber
+                linesNumber + " " + wordsNumber + " " + bytesNumber
             );
         } catch (final IOException e) {
             return CommandResultFactory.createUnsuccessfulCommandResult(e);
