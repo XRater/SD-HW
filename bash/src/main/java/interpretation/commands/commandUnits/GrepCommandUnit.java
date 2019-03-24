@@ -1,9 +1,11 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
 import org.apache.commons.cli.*;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
@@ -40,7 +42,7 @@ class GrepCommandUnit implements CommandUnit {
     }
 
     @Override
-    public String execute(String input) {
+    public CommandResult execute(String input) {
         if (input == null) {
             input = "";
         }
@@ -50,27 +52,20 @@ class GrepCommandUnit implements CommandUnit {
         } else {
             p = Pattern.compile(cmd.getOptionValue("regex"));
         }
-        final String[] lines = input.split("\n");
-        final boolean[] matches = new boolean[lines.length];
-        Arrays.fill(matches, false);
-        for (int i = 0; i < lines.length; i++) {
-            if (p.matcher(lines[i]).find()) {
-                matches[i] = true;
-            }
-        }
         final int printRange = cmd.hasOption("after-context")
                 ? Integer.parseInt(cmd.getOptionValue("after-context")) : 0;
         int lastMatch = -1;
-        final StringJoiner joiner = new StringJoiner("\n");
-        for (int i = 0; i < matches.length; i++) {
-            if (matches[i]) {
+        final StringJoiner joiner = new StringJoiner(System.lineSeparator());
+        final String[] lines = input.split(System.lineSeparator());
+        for (int i = 0; i < lines.length; i++) {
+            if (p.matcher(lines[i]).find()) {
                 lastMatch = i;
             }
             if (i - lastMatch <= printRange && lastMatch != -1) {
                 joiner.add(lines[i]);
             }
         }
-        return joiner.toString();
+        return CommandResultFactory.createSuccessfulCommandResult(joiner.toString() + '\n');
     }
 
     @Override
@@ -79,5 +74,10 @@ class GrepCommandUnit implements CommandUnit {
             return cmd.equals(((GrepCommandUnit) obj).cmd);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cmd);
     }
 }
