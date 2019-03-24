@@ -52,7 +52,7 @@ public class CommandFactory {
 
         private void processOutput(final String output) {
             if (output != null) {
-                System.out.println(output);
+                System.out.print(output);
             }
         }
     }

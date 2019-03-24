@@ -19,7 +19,7 @@ class EchoCommandUnit implements CommandUnit {
 
     @Override
     public CommandResult execute(final String input) {
-        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args));
+        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args) + '\n');
     }
 
     @Override

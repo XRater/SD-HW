@@ -43,8 +43,8 @@ class WcCommandUnit implements CommandUnit {
         } else {
             content = input == null ? "" : input;
         }
-        final int linesNumber = content.split("\n").length;
-        final int wordsNumber = content.split("\\s").length;
+        final long linesNumber = content.chars().filter(c -> c == '\n').count();
+        final long wordsNumber = content.split("\\s\\s*").length;
         final long bytesNumber = content.length();
         return CommandResultFactory.createSuccessfulCommandResult(
                 linesNumber + " " + wordsNumber + " " + bytesNumber
