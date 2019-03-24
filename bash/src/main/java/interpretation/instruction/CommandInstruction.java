@@ -11,6 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+/**
+ * Represents list of commands to execute consequently
+ */
 public class CommandInstruction implements Instruction {
 
     private final Command command;
@@ -23,6 +26,10 @@ public class CommandInstruction implements Instruction {
         this.command.addCommandUnit(commandUnit);
     }
 
+    /**
+     * @param session session to execute instruction in
+     * @throws CommandExecutionException if exception happened during execution
+     */
     @Override
     public void execute(@NotNull final Session session) throws CommandExecutionException {
         command.run();
