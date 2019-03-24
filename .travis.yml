@@ -3,5 +3,5 @@ language: java
 before_install:
   - chmod +x bash/gradlew
 script:
-  - cd CLI
+  - cd bash
   - ./gradlew build
