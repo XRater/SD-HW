@@ -27,27 +27,28 @@ class WcCommandUnit implements CommandUnit {
         this.file = args.size() == 2 ? args.get(1) : null;
     }
 
-    // CommandUnit classes atr implementations of different commands, therefore
+    // CommandUnit classes are implementations of different commands, therefore
     // we dont want to have more connections between pair of them (only common interface)
     @SuppressWarnings("Duplicates")
     @Override
     public CommandResult execute(final String input) {
-        final String actualFile = input == null ? file : input;
-        if (actualFile == null) {
-            throw new IllegalArgumentException();
+        final String content;
+        if (file != null) {
+            final File targetFile = new File(file);
+            try {
+                content =  FileUtils.readFileToString(targetFile, (String) null);
+            } catch (final IOException e) {
+                return CommandResultFactory.createUnsuccessfulCommandResult(e);
+            }
+        } else {
+            content = input == null ? "" : input;
         }
-        final File file = new File(actualFile);
-        try {
-            final String content =  FileUtils.readFileToString(file, (String) null);
-            final int linesNumber = content.split("\n").length;
-            final int wordsNumber = content.split("\\s").length;
-            final long bytesNumber = file.length();
-            return CommandResultFactory.createSuccessfulCommandResult(
+        final int linesNumber = content.split("\n").length;
+        final int wordsNumber = content.split("\\s").length;
+        final long bytesNumber = content.length();
+        return CommandResultFactory.createSuccessfulCommandResult(
                 linesNumber + " " + wordsNumber + " " + bytesNumber
-            );
-        } catch (final IOException e) {
-            return CommandResultFactory.createUnsuccessfulCommandResult(e);
-        }
+        );
     }
 
     @Override

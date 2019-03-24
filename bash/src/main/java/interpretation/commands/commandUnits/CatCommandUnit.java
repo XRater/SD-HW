@@ -26,18 +26,18 @@ class CatCommandUnit implements CommandUnit {
     @SuppressWarnings("Duplicates")
     @Override
     public CommandResult execute(final String input) {
-        final String actualFile = input == null ? file : input;
-        if (actualFile == null) {
-            throw new IllegalArgumentException();
+        final String content;
+        if (file != null) {
+            final File targetFile = new File(file);
+            try {
+                content =  FileUtils.readFileToString(targetFile, (String) null);
+            } catch (final IOException e) {
+                return CommandResultFactory.createUnsuccessfulCommandResult(e);
+            }
+        } else {
+            content = input == null ? "" : input;
         }
-        final File file = new File(actualFile);
-        try {
-            return CommandResultFactory.createSuccessfulCommandResult(
-                    FileUtils.readFileToString(file, (String) null)
-            );
-        } catch (final IOException e) {
-            return CommandResultFactory.createUnsuccessfulCommandResult(e);
-        }
+        return CommandResultFactory.createSuccessfulCommandResult(content);
     }
 
     @Override

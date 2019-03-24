@@ -65,6 +65,9 @@ public class BashParser {
     @NotNull
     private static CommandUnit parseToUnitCommand(final @NotNull String unitCommand, final Scope scope) throws BashParseException {
         final List<String> unparsedTokens = splitToTokensIgnoringQuotes(unitCommand, ' ');
+        if (unparsedTokens.isEmpty()) {
+            throw new BashParseException("Empty command is not supported");
+        }
         final List<String> tokens = new ArrayList<>();
         for (final var unparsedToken : unparsedTokens) {
             tokens.add(applyScope(unparsedToken, scope));
