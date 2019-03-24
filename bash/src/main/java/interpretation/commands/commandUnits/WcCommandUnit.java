@@ -1,5 +1,7 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -29,7 +31,7 @@ class WcCommandUnit implements CommandUnit {
     // we dont want to have more connections between pair of them (only common interface)
     @SuppressWarnings("Duplicates")
     @Override
-    public String execute(final String input) {
+    public CommandResult execute(final String input) {
         final String actualFile = input == null ? file : input;
         if (actualFile == null) {
             throw new IllegalArgumentException();
@@ -40,10 +42,11 @@ class WcCommandUnit implements CommandUnit {
             final int bytesNumber = content.length();
             final int wordsNumber = content.split(" ").length;
             final int linesNumber = content.split("\n").length;
-            return bytesNumber + " " + wordsNumber + " " + linesNumber;
+            return CommandResultFactory.createSuccessfulCommandResult(
+                bytesNumber + " " + wordsNumber + " " + linesNumber
+            );
         } catch (final IOException e) {
-            System.err.println("Failed to read from file '" + file.getName() + "'");
-            return null;
+            return CommandResultFactory.createUnsuccessfulCommandResult(e);
         }
     }
 

@@ -1,5 +1,6 @@
 import interpretation.Session;
 import interpretation.SessionFactory;
+import interpretation.commands.CommandExecutionException;
 import parsing.BashParseException;
 
 import java.util.Scanner;
@@ -21,6 +22,8 @@ public class Main {
                 session.processInput(input);
             } catch (final BashParseException e) {
                 System.err.println("Parsing error");
+            } catch (final CommandExecutionException e) {
+                System.err.println("Execution error");
             }
         }
     }

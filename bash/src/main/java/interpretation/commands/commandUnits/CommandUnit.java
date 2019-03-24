@@ -1,5 +1,7 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+
 /**
  * Interface for one command unit. May be executed on string input
  */
@@ -11,6 +13,6 @@ public interface CommandUnit {
      * @param input input to execute on
      * @return result of command execution
      */
-    String execute(String input);
+    CommandResult execute(String input);
 
 }

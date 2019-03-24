@@ -1,5 +1,6 @@
 package interpretation;
 
+import interpretation.commands.CommandExecutionException;
 import interpretation.instruction.Instruction;
 import org.jetbrains.annotations.NotNull;
 import parsing.BashParseException;
@@ -7,6 +8,9 @@ import parsing.BashParser;
 
 import java.util.List;
 
+/**
+ * Factory class to create sessions (see {@link Session})
+ */
 public class SessionFactory {
 
     /**
@@ -27,7 +31,7 @@ public class SessionFactory {
         private final Scope scope = new Scope();
 
         @Override
-        public void processInput(@NotNull final String input) throws BashParseException {
+        public void processInput(@NotNull final String input) throws BashParseException, CommandExecutionException {
             final List<String> instructionStrings = BashParser.splitToInstructions(input);
             for (final String instructionString : instructionStrings) {
                 final Instruction instruction = BashParser.parse(instructionString, scope);

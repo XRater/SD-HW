@@ -1,5 +1,8 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -15,8 +18,8 @@ class EchoCommandUnit implements CommandUnit {
     }
 
     @Override
-    public String execute(final String input) {
-        return String.join(" ", args);
+    public CommandResult execute(final String input) {
+        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args));
     }
 
     @Override

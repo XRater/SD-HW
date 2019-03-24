@@ -1,5 +1,6 @@
 package interpretation.commands;
 
+import interpretation.commands.commandResult.CommandResult;
 import interpretation.commands.commandUnits.CommandUnit;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,14 +28,20 @@ public class CommandFactory {
         }
 
         @Override
-        public void run() {
+        public void run() throws CommandExecutionException {
             if (unitCommandsQueue.isEmpty()) {
                 return;
             }
             String commandData = getInitialInput();
+            CommandResult commandResult;
             while (!unitCommandsQueue.isEmpty()) {
                 final CommandUnit commandUnit = unitCommandsQueue.poll();
-                commandData = commandUnit.execute(commandData);
+                commandResult = commandUnit.execute(commandData);
+                if (commandResult.isValid()) {
+                    commandData = commandResult.getResult();
+                } else {
+                    throw new CommandExecutionException(commandResult.getException());
+                }
             }
             processOutput(commandData);
         }

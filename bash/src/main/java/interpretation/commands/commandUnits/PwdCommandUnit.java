@@ -1,5 +1,8 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
+
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -12,8 +15,8 @@ class PwdCommandUnit implements CommandUnit {
     }
 
     @Override
-    public String execute(final String input) {
-        return System.getProperty("user.dir");
+    public CommandResult execute(final String input) {
+        return CommandResultFactory.createSuccessfulCommandResult(System.getProperty("user.dir"));
     }
 
     @Override

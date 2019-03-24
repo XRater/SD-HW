@@ -1,5 +1,8 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -16,15 +19,15 @@ class SystemCommandUnit implements CommandUnit {
     }
 
     @Override
-    public String execute(final String input) {
+    public CommandResult execute(final String input) {
         final Process p;
         try {
             p = new ProcessBuilder(args).start();
             p.waitFor();
         } catch (final IOException | InterruptedException e) {
-            System.err.println("Failed to execute command '" + args.get(0) + "'");
+            return CommandResultFactory.createUnsuccessfulCommandResult(e);
         }
-        return null;
+        return CommandResultFactory.createSuccessfulCommandResult(null);
     }
 
     @Override

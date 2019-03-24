@@ -1,5 +1,7 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -23,17 +25,18 @@ class CatCommandUnit implements CommandUnit {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public String execute(final String input) {
+    public CommandResult execute(final String input) {
         final String actualFile = input == null ? file : input;
         if (actualFile == null) {
             throw new IllegalArgumentException();
         }
         final File file = new File(actualFile);
         try {
-            return FileUtils.readFileToString(file, (String) null);
+            return CommandResultFactory.createSuccessfulCommandResult(
+                    FileUtils.readFileToString(file, (String) null)
+            );
         } catch (final IOException e) {
-            System.err.println("Failed to read from file '" + file.getName() + "'");
-            return null;
+            return CommandResultFactory.createUnsuccessfulCommandResult(e);
         }
     }
 

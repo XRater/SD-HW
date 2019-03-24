@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import interpretation.Session;
 import interpretation.commands.Command;
+import interpretation.commands.CommandExecutionException;
 import interpretation.commands.CommandFactory;
 import interpretation.commands.commandUnits.CommandUnit;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public class CommandInstruction implements Instruction {
     }
 
     @Override
-    public void execute(@NotNull final Session session) {
+    public void execute(@NotNull final Session session) throws CommandExecutionException {
         command.run();
     }
 

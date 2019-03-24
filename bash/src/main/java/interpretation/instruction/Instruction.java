@@ -1,6 +1,7 @@
 package interpretation.instruction;
 
 import interpretation.Session;
+import interpretation.commands.CommandExecutionException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,7 +11,8 @@ public interface Instruction {
 
     /**
      * @param session session to execute instruction in
+     * @throws CommandExecutionException if exception happened during execution
      */
-    void execute(@NotNull Session session);
+    void execute(@NotNull Session session) throws CommandExecutionException;
 
 }
