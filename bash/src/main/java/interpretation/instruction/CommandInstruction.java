@@ -1,10 +1,14 @@
 package interpretation.instruction;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import interpretation.Session;
 import interpretation.commands.Command;
 import interpretation.commands.CommandFactory;
 import interpretation.commands.commandUnits.CommandUnit;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class CommandInstruction implements Instruction {
 
@@ -29,5 +33,10 @@ public class CommandInstruction implements Instruction {
             return command.equals(obj);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(command);
     }
 }

@@ -2,6 +2,7 @@ package interpretation.commands.commandUnits;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 class SystemCommandUnit implements CommandUnit {
 
@@ -29,9 +30,13 @@ class SystemCommandUnit implements CommandUnit {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof SystemCommandUnit) {
-            return args.equals(((SystemCommandUnit) obj).args);
+            return Objects.equals(((SystemCommandUnit) obj).args, args);
         }
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(args);
+    }
 }

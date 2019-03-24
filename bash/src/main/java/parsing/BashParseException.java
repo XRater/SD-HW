@@ -1,6 +1,6 @@
 package parsing;
 
-public class BashParseException extends Throwable {
+public class BashParseException extends Exception {
 
 
 }

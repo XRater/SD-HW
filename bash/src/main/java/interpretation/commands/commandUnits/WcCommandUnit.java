@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /*
 * The command returns number of bytes, words and lines in file.
@@ -49,12 +50,13 @@ class WcCommandUnit implements CommandUnit {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof WcCommandUnit) {
-            if (file == null) {
-                return ((WcCommandUnit) obj).file == null;
-            }
-            return file.equals(((WcCommandUnit) obj).file);
+            return Objects.equals(((WcCommandUnit) obj).file, file);
         }
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(file);
+    }
 }

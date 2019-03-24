@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 class CatCommandUnit implements CommandUnit {
 
@@ -39,11 +40,13 @@ class CatCommandUnit implements CommandUnit {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof CatCommandUnit) {
-            if (file == null) {
-                return ((CatCommandUnit) obj).file == null;
-            }
-            return file.equals(((CatCommandUnit) obj).file);
+            return Objects.equals(((CatCommandUnit) obj).file, file);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file);
     }
 }

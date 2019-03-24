@@ -6,8 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Factory class to create commands (see {@link Command})
+ */
 public class CommandFactory {
 
+    /**
+     * @return new command with default implementation
+     */
     public static Command createNewCommand() {
         return new DummyCommand();
     }
