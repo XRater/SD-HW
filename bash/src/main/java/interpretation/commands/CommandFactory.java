@@ -1,13 +1,20 @@
 package interpretation.commands;
 
+import interpretation.commands.commandResult.CommandResult;
 import interpretation.commands.commandUnits.CommandUnit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Factory class to create commands (see {@link Command})
+ */
 public class CommandFactory {
 
+    /**
+     * @return new command with default implementation
+     */
     public static Command createNewCommand() {
         return new DummyCommand();
     }
@@ -21,14 +28,20 @@ public class CommandFactory {
         }
 
         @Override
-        public void run() {
+        public void run() throws CommandExecutionException {
             if (unitCommandsQueue.isEmpty()) {
                 return;
             }
             String commandData = getInitialInput();
+            CommandResult commandResult;
             while (!unitCommandsQueue.isEmpty()) {
                 final CommandUnit commandUnit = unitCommandsQueue.poll();
-                commandData = commandUnit.execute(commandData);
+                commandResult = commandUnit.execute(commandData);
+                if (commandResult.isValid()) {
+                    commandData = commandResult.getResult();
+                } else {
+                    throw new CommandExecutionException(commandResult.getException());
+                }
             }
             processOutput(commandData);
         }
@@ -39,7 +52,7 @@ public class CommandFactory {
 
         private void processOutput(final String output) {
             if (output != null) {
-                System.out.println(output);
+                System.out.print(output);
             }
         }
     }

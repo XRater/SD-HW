@@ -1,12 +1,16 @@
 package parsing;
 
+/**
+ * Exception to represent any errors happened during parsing
+ */
+@SuppressWarnings("WeakerAccess")
 public class BashParseException extends Exception {
 
-    BashParseException() {
+    public BashParseException() {
         super();
     }
 
-    BashParseException(final String message) {
+    public BashParseException(final String message) {
         super(message);
     }
 }

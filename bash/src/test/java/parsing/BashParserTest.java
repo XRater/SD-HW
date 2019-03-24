@@ -57,6 +57,9 @@ class BashParserTest {
         assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("a''=44"));
         assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("$a=44"));
         assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("a\'=\'44"));
+        assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("a\"=\"44"));
+        assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("\"=\"44"));
+        assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("\'=\'44"));
         assertFalse(BashParser.TestBashParser.callCheckInstructionForAssignment("a$b=44"));
     }
 

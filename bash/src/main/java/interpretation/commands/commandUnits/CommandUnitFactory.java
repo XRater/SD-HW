@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Factory to create unit command (see {@link CommandUnit})
+ */
 public class CommandUnitFactory {
 
     private static final Map<String, Function<List<String>, CommandUnit>> commands = Map.ofEntries(
@@ -15,6 +18,13 @@ public class CommandUnitFactory {
         Map.entry("grep", CommandUnitFactory::createGrepCommandUnit)
     );
 
+    /**
+     * Constructs command from the list of arguments. First token of the list represents
+     * command name
+     *
+     * @param tokens list of arguments. First element represents target unit command name
+     * @return constructed command unit
+     */
     public static CommandUnit constructCommandUnit(final List<String> tokens) {
         if (tokens.isEmpty()) {
             throw new IllegalArgumentException();

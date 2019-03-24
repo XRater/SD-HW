@@ -1,0 +1,11 @@
+sudo: false
+language: java
+jdk:
+  - oraclejdk11
+  - openjdk10
+  - openjdk11
+before_install:
+  - chmod +x bash/gradlew
+script:
+  - cd bash
+  - ./gradlew build

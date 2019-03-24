@@ -1,7 +1,10 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
+
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.Objects;
 
 class EchoCommandUnit implements CommandUnit {
 
@@ -15,20 +18,20 @@ class EchoCommandUnit implements CommandUnit {
     }
 
     @Override
-    public String execute(final String input) {
-        final StringJoiner joiner = new StringJoiner(" ");
-        for (final String arg : args) {
-            joiner.add(arg);
-        }
-        return joiner.toString();
+    public CommandResult execute(final String input) {
+        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args) + '\n');
     }
 
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof EchoCommandUnit) {
-            return args.equals(((EchoCommandUnit) obj).args);
+            return Objects.equals(((EchoCommandUnit) obj).args, args);
         }
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(args);
+    }
 }

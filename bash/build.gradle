@@ -6,6 +6,11 @@ plugins {
 	id 'java-library'
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': 'Main'
+	}
+}
 
 dependencies {
 	api 'org.apache.commons:commons-math3:3.6.1'

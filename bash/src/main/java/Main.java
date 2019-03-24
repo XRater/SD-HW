@@ -1,5 +1,6 @@
 import interpretation.Session;
 import interpretation.SessionFactory;
+import interpretation.commands.CommandExecutionException;
 import parsing.BashParseException;
 
 import java.util.Scanner;
@@ -20,10 +21,17 @@ public class Main {
             try {
                 session.processInput(input);
             } catch (final BashParseException e) {
-                System.err.println("Parsing error");
                 if (e.getMessage() != null) {
-                    System.out.println("Reason: " + e.getMessage());
+                    System.err.println(e.getMessage());
+                } else {
+                    System.err.println("Unknown parsing error");
                 }
+            } catch (final CommandExecutionException e) {
+                String message = "Execution error";
+                if (e.getCause().getMessage() != null) {
+                    message = e.getCause().getMessage();
+                }
+                System.err.println(message);
             }
         }
     }

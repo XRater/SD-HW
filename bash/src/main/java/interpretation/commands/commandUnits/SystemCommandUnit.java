@@ -1,37 +1,57 @@
 package interpretation.commands.commandUnits;
 
+import interpretation.commands.commandResult.CommandResult;
+import interpretation.commands.commandResult.CommandResultFactory;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class SystemCommandUnit implements CommandUnit {
 
+    private static final int BUF_SIZE = 1024;
     private final List<String> args;
 
     SystemCommandUnit(final List<String> args) {
         if (args.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        this.args = args.subList(0, args.size());
+        this.args = args;
     }
 
     @Override
-    public String execute(final String input) {
-        final Process p;
+    public CommandResult execute(final String input) {
+        final Process process;
+        String result = "";
         try {
-            p = new ProcessBuilder(args).start();
-            p.waitFor();
+            process = new ProcessBuilder(args).start();
+            process.waitFor();
+            try (final Reader reader = new InputStreamReader(process.getInputStream())) {
+                final char[] buffer = new char[BUF_SIZE];
+                while (reader.read(buffer, 0, BUF_SIZE) > 0) {
+                    result = result.concat(new String(buffer));
+                }
+            }
         } catch (final IOException | InterruptedException e) {
-            System.err.println("Failed to execute command '" + args.get(0) + "'");
+            return CommandResultFactory.createUnsuccessfulCommandResult(e);
         }
-        return null;
+        return CommandResultFactory.createSuccessfulCommandResult(result + '\n');
     }
 
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof SystemCommandUnit) {
-            return args.equals(((SystemCommandUnit) obj).args);
+            return Objects.equals(((SystemCommandUnit) obj).args, args);
         }
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(args);
+    }
 }
