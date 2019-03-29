@@ -44,7 +44,7 @@ class WcCommandUnit implements CommandUnit {
         } else {
             content = input == null ? "" : input;
         }
-        long linesNumber = Arrays.stream(content.split(System.lineSeparator())).count();
+        long linesNumber = content.split(System.lineSeparator()).length;
         if (linesNumber == 0) {
             linesNumber = 1;
         }

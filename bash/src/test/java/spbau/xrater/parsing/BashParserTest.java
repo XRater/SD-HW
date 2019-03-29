@@ -66,32 +66,36 @@ class BashParserTest {
     @Test
     void testCallSplitTokensIgnoringQuotes() {
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("", ' ', false),
                 List.of()
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("a", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("a", ' ', false),
                 List.of("a")
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("a b", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("a b", ' ', false),
                 List.of("a", "b")
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a'", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a'", ' ', false),
                 List.of("'a'")
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("\"a\"", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("\"a\"", ' ', false),
                 List.of("\"a\"")
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a b'", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a b'", ' ', false),
                 List.of("'a b'")
         );
         assertEquals(
-                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a' 'b'", ' '),
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("'a' 'b'", ' ', false),
                 List.of("'a'", "'b'")
+        );
+        assertEquals(
+                BashParser.TestBashParser.callSplitTokensIgnoringQuotes("|", '|', true),
+                List.of("", "")
         );
     }
 
@@ -99,7 +103,7 @@ class BashParserTest {
     void testCallSplitToUnitCommands() {
         assertEquals(
                 BashParser.TestBashParser.callSplitToUnitCommands(""),
-                List.of()
+                List.of("")
         );
         assertEquals(
                 BashParser.TestBashParser.callSplitToUnitCommands("echo 1"),
@@ -115,7 +119,7 @@ class BashParserTest {
         );
         assertEquals(
                 BashParser.TestBashParser.callSplitToUnitCommands("\"echo\"|"),
-                List.of("\"echo\"")
+                List.of("\"echo\"", "")
         );
         assertEquals(
                 BashParser.TestBashParser.callSplitToUnitCommands("'echo 1 | echo 2'"),
@@ -123,7 +127,7 @@ class BashParserTest {
         );
         assertEquals(
                 BashParser.TestBashParser.callSplitToUnitCommands("echo||echo"),
-                List.of("echo", "echo")
+                List.of("echo", "", "echo")
         );
     }
 }
