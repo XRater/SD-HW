@@ -1,9 +1,12 @@
 package spbau.xrater.interpretation.commands.commandUnits;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FileUtils;
 import spbau.xrater.interpretation.commands.commandResult.CommandResult;
 import spbau.xrater.interpretation.commands.commandResult.CommandResultFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -29,13 +32,8 @@ class GrepCommandUnit implements CommandUnit {
         if (args.isEmpty() || !args.get(0).equals("grep")) {
             throw new IllegalArgumentException();
         }
-
         try {
             cmd = parser.parse(options, args.toArray(new String[0]));
-            if (cmd.hasOption("after-context")) {
-                //noinspection ResultOfMethodCallIgnored
-                Integer.parseInt(cmd.getOptionValue("after-context"));
-            }
         } catch (final ParseException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -45,6 +43,25 @@ class GrepCommandUnit implements CommandUnit {
     public CommandResult execute(String input) {
         if (input == null) {
             input = "";
+        }
+        if (cmd.getArgs().length > 1) {
+            if (cmd.getArgs().length > 2) {
+                return CommandResultFactory.createUnsuccessfulCommandResult(
+                    new Exception("Too much arguments")
+                );
+            }
+            try {
+                input =  FileUtils.readFileToString(new File(cmd.getArgs()[1]), (String) null);
+            } catch (final IOException e) {
+                return CommandResultFactory.createUnsuccessfulCommandResult(e);
+            }
+        }
+        if (cmd.hasOption("after-context")) {
+            try {
+                Integer.parseInt(cmd.getOptionValue("after-context"));
+            } catch (final NumberFormatException e) {
+                return CommandResultFactory.createUnsuccessfulCommandResult(e);
+            }
         }
         String pattern = cmd.getOptionValue("regex");
         if (cmd.hasOption("word-regexp")) {
