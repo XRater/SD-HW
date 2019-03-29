@@ -51,6 +51,15 @@ class CommandUnitExecuteTest {
         checkValidResult(echoCommand.execute("hello"), "a b\n");
     }
 
+    @Test
+    void testGrepUnitCommand() {
+        final CommandUnit firstCommand = CommandUnitFactory.constructCommandUnit(List.of("echo", "123"));
+        final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
+                "grep"
+        ));
+        checkValidResult(grepCommand.execute(firstCommand.execute("").getResult()), "");
+    }
+
     void checkValidResult(final CommandResult result, final String expected) {
         assertTrue(result.isValid());
         assertEquals(expected, result.getResult());
