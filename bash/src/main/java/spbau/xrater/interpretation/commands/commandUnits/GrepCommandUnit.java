@@ -12,6 +12,19 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
+/**
+ * Finds string in the given text containing target pattern.
+ *
+ * Supports options:
+ *      -e pattern -- pattern to look for
+ *      -w         -- for complete word match
+ *      -i         -- for ignore case
+ *      -A N       -- for printing N lines after each match
+ *
+ * If -e options is not specified first argument is used as pattern.
+ *
+ * First argument (or second if -e is not specified) is taken as target file
+ */
 class GrepCommandUnit implements CommandUnit {
 
     private static final Options options = new Options();
@@ -63,7 +76,12 @@ class GrepCommandUnit implements CommandUnit {
         }
         if (cmd.hasOption("after-context")) {
             try {
-                Integer.parseInt(cmd.getOptionValue("after-context"));
+                final int value = Integer.parseInt(cmd.getOptionValue("after-context"));
+                if (value < 0) {
+                    return CommandResultFactory.createUnsuccessfulCommandResult(
+                            new Exception("Illegal value for -A option")
+                    );
+                }
             } catch (final NumberFormatException e) {
                 return CommandResultFactory.createUnsuccessfulCommandResult(e);
             }

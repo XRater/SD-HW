@@ -104,14 +104,46 @@ class CommandUnitExecuteTest {
         checkValidResult(grepCommand.execute("x\nx\na\nb\nc\nd\na\nc"), "a\nb\nc\na\nc\n");
     }
 
+    @Test
+    void testGrepUnitCommandWithoutPatternFlagForError() {
+        final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
+                "grep"
+        ));
+        checkInvalidResult(grepCommand.execute("sometext\n"));
+    }
+
+    @Test
+    void testGrepUnitCommandWithoutPatternFlag() {
+        final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
+                "grep", "a..b"
+        ));
+        checkValidResult(grepCommand.execute("axybcd\n"), "axybcd\n");
+    }
+
+    @Test
+    void testGrepUnitCommandWithAfterContextForError() {
+        CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
+                "grep", "-e", "x", "-A", "-2"
+        ));
+        checkInvalidResult(grepCommand.execute("sometext\n"));
+        grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
+                "grep", "-e", "x", "-A", "asda"
+        ));
+        checkInvalidResult(grepCommand.execute("sometext\n"));
+    }
+
     void checkValidResult(final CommandResult result, final String expected) {
         assertTrue(result.isValid());
         assertEquals(expected, result.getResult());
     }
 
-    void checkValidResult(final CommandResult result, final Class<Exception> clazz) {
+    void checkInvalidResult(final CommandResult result) {
         assertFalse(result.isValid());
-        assertEquals(result.getException().getClass(), clazz);
+    }
+
+    void checkInvalidResult(final CommandResult result, final String message) {
+        assertFalse(result.isValid());
+        assertEquals(result.getException().getMessage(), message);
     }
 
 }
