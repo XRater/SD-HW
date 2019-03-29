@@ -59,12 +59,12 @@ public class BashParser {
 
     @NotNull
     private static List<String> splitToUnitCommands(final @NotNull String input) {
-        return splitToTokensIgnoringQuotes(input, '|');
+        return splitToTokensIgnoringQuotes(input, '|', true);
     }
 
     @NotNull
     private static CommandUnit parseToUnitCommand(final @NotNull String unitCommand, final Scope scope) throws BashParseException {
-        final List<String> unparsedTokens = splitToTokensIgnoringQuotes(unitCommand, ' ');
+        final List<String> unparsedTokens = splitToTokensIgnoringQuotes(unitCommand, ' ', false);
         if (unparsedTokens.isEmpty()) {
             throw new BashParseException("Empty command is not supported");
         }
@@ -150,7 +150,11 @@ public class BashParser {
      * @return list of string tokens after splitting
      */
     @NotNull
-    private static List<String> splitToTokensIgnoringQuotes(@NotNull final String input, final char symbol) {
+    private static List<String> splitToTokensIgnoringQuotes(
+            @NotNull final String input,
+            final char symbol,
+            final boolean takeEmpty
+    ) {
         final List<String> tokens = new ArrayList<>();
         final StringBuilder sb = new StringBuilder();
         Character quote = null;
@@ -159,7 +163,7 @@ public class BashParser {
                 if (c == '\'' || c == '\"') {
                     quote = c;
                 } else if (c == symbol) {
-                    if (sb.length() != 0) {
+                    if (sb.length() != 0 || takeEmpty) {
                         tokens.add(sb.toString());
                         sb.setLength(0);
                     }
@@ -170,7 +174,7 @@ public class BashParser {
             }
             sb.append(c);
         }
-        if (sb.length() != 0) {
+        if (sb.length() != 0 || takeEmpty) {
             tokens.add(sb.toString());
         }
         return tokens;
@@ -180,8 +184,8 @@ public class BashParser {
     static class TestBashParser {
 
         @SuppressWarnings("SameParameterValue")
-        static List<String> callSplitTokensIgnoringQuotes(final String input, final char symbol) {
-            return splitToTokensIgnoringQuotes(input, symbol);
+        static List<String> callSplitTokensIgnoringQuotes(final String input, final char symbol, final boolean takeEmpty) {
+            return splitToTokensIgnoringQuotes(input, symbol, takeEmpty);
         }
 
         static List<String> callSplitToUnitCommands(final String input) {

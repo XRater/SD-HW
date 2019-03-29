@@ -23,8 +23,8 @@ public class CommandFactory {
         private final Queue<CommandUnit> unitCommandsQueue = new LinkedList<>();
 
         @Override
-        public void addCommandUnit(@NotNull final CommandUnit c) {
-            unitCommandsQueue.add(c);
+        public void addCommandUnit(@NotNull final CommandUnit unitCommand) {
+            unitCommandsQueue.add(unitCommand);
         }
 
         @Override
