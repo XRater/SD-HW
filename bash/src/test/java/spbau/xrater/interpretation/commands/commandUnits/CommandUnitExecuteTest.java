@@ -56,14 +56,14 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-e", "aaa"
         ));
-        checkValidResult(grepCommand.execute(null), "\n");
-        checkValidResult(grepCommand.execute("123"), "\n");
-        checkValidResult(grepCommand.execute("aaa"), "aaa\n");
-        checkValidResult(grepCommand.execute("aaabaaa"), "aaabaaa\n");
-        checkValidResult(grepCommand.execute("helloaaa"), "helloaaa\n");
-        checkValidResult(grepCommand.execute("first\nhelloaaa\nsecondaaa"), "helloaaa\nsecondaaa\n");
-        checkValidResult(grepCommand.execute("first\nhelloaa\nsecondaaa"), "secondaaa\n");
-        checkValidResult(grepCommand.execute("first\nhelloAAA\nsecondaaa"), "secondaaa\n");
+        checkValidResult(grepCommand.execute(null), constructFromLines());
+        checkValidResult(grepCommand.execute("123"), constructFromLines());
+        checkValidResult(grepCommand.execute("aaa"), constructFromLines("aaa"));
+        checkValidResult(grepCommand.execute("aaabaaa"), constructFromLines("aaabaaa"));
+        checkValidResult(grepCommand.execute("helloaaa"), constructFromLines("helloaaa"));
+        checkValidResult(grepCommand.execute(constructFromLines("first", "helloaaa", "secondaaa")), constructFromLines("helloaaa", "secondaaa"));
+        checkValidResult(grepCommand.execute(constructFromLines("first", "helloaa", "secondaaa")), constructFromLines("secondaaa"));
+        checkValidResult(grepCommand.execute(constructFromLines("first", "helloAAA", "secondaaa")), constructFromLines("secondaaa"));
     }
 
     @Test
@@ -71,10 +71,10 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-i", "-e", "a.b"
         ));
-        checkValidResult(grepCommand.execute("acb"), "acb\n");
-        checkValidResult(grepCommand.execute("ACb"), "ACb\n");
-        checkValidResult(grepCommand.execute("xxACbxx"), "xxACbxx\n");
-        checkValidResult(grepCommand.execute("xxA.bxx"), "xxA.bxx\n");
+        checkValidResult(grepCommand.execute("acb"), constructFromLines("acb"));
+        checkValidResult(grepCommand.execute("ACb"), constructFromLines("ACb"));
+        checkValidResult(grepCommand.execute("xxACbxx"), constructFromLines("xxACbxx"));
+        checkValidResult(grepCommand.execute("xxA.bxx"), constructFromLines("xxA.bxx"));
     }
 
     @Test
@@ -82,10 +82,10 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-w", "-e", "abc"
         ));
-        checkValidResult(grepCommand.execute("abc"), "abc\n");
-        checkValidResult(grepCommand.execute("abcd"), "\n");
-        checkValidResult(grepCommand.execute("yabc"), "\n");
-        checkValidResult(grepCommand.execute("y abc d"), "y abc d\n");
+        checkValidResult(grepCommand.execute("abc"), constructFromLines("abc"));
+        checkValidResult(grepCommand.execute("abcd"), constructFromLines());
+        checkValidResult(grepCommand.execute("yabc"), constructFromLines());
+        checkValidResult(grepCommand.execute("y abc d"), constructFromLines("y abc d"));
     }
 
     @Test
@@ -93,7 +93,7 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-A", "0", "-e", "a"
         ));
-        checkValidResult(grepCommand.execute("x\nx\na\nb\na\nc"), "a\na\n");
+        checkValidResult(grepCommand.execute(constructFromLines("x", "x","a", "b", "a", "c")), constructFromLines("a", "a"));
     }
 
     @Test
@@ -101,7 +101,10 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-A", "2", "-e", "a"
         ));
-        checkValidResult(grepCommand.execute("x\nx\na\nb\nc\nd\na\nc"), "a\nb\nc\na\nc\n");
+        checkValidResult(
+                grepCommand.execute(constructFromLines("x", "x", "a", "b", "c", "d", "a", "c")),
+                constructFromLines("a", "b", "c", "a", "c")
+        );
     }
 
     @Test
@@ -109,7 +112,7 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep"
         ));
-        checkInvalidResult(grepCommand.execute("sometext\n"));
+        checkInvalidResult(grepCommand.execute(constructFromLines("sometext")));
     }
 
     @Test
@@ -117,7 +120,7 @@ class CommandUnitExecuteTest {
         final CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "a..b"
         ));
-        checkValidResult(grepCommand.execute("axybcd\n"), "axybcd\n");
+        checkValidResult(grepCommand.execute(constructFromLines("axybcd")), constructFromLines("axybcd"));
     }
 
     @Test
@@ -125,11 +128,11 @@ class CommandUnitExecuteTest {
         CommandUnit grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-e", "x", "-A", "-2"
         ));
-        checkInvalidResult(grepCommand.execute("sometext\n"));
+        checkInvalidResult(grepCommand.execute(constructFromLines("sometext")));
         grepCommand = CommandUnitFactory.constructCommandUnit(List.of(
                 "grep", "-e", "x", "-A", "asda"
         ));
-        checkInvalidResult(grepCommand.execute("sometext\n"));
+        checkInvalidResult(grepCommand.execute(constructFromLines("sometext")));
     }
 
     void checkValidResult(final CommandResult result, final String expected) {

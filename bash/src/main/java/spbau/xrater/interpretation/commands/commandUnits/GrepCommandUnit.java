@@ -83,7 +83,9 @@ class GrepCommandUnit implements CommandUnit {
                     );
                 }
             } catch (final NumberFormatException e) {
-                return CommandResultFactory.createUnsuccessfulCommandResult(e);
+                return CommandResultFactory.createUnsuccessfulCommandResult(
+                        new Exception("Illegal value for -A option")
+                );
             }
         }
         String pattern = hasRegexp ? cmd.getOptionValue("regex") : cmd.getArgs()[1];
