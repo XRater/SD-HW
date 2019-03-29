@@ -18,9 +18,7 @@ class GrepCommandUnit implements CommandUnit {
     private static final CommandLineParser parser = new BasicParser();
 
     static {
-        final Option regex = new Option("e", "regex", true, "pattern");
-        regex.setRequired(true);
-        options.addOption(regex);
+        options.addOption(new Option("e", "regex", true, "pattern"));
         options.addOption(new Option("i", "ignore-case", false, "ignore case"));
         options.addOption(new Option("w", "word-regexp", false, "match full"));
         options.addOption(new Option("A", "after-context", true, "print more"));
@@ -44,14 +42,21 @@ class GrepCommandUnit implements CommandUnit {
         if (input == null) {
             input = "";
         }
-        if (cmd.getArgs().length > 1) {
-            if (cmd.getArgs().length > 2) {
-                return CommandResultFactory.createUnsuccessfulCommandResult(
+        final boolean hasRegexp = cmd.hasOption("regex");
+        if (!hasRegexp && cmd.getArgs().length == 1) {
+            return CommandResultFactory.createUnsuccessfulCommandResult(
+                    new Exception("Pattern is required")
+            );
+        }
+        final int fileArgNumber = hasRegexp ? 1 : 2;
+        if (cmd.getArgs().length > fileArgNumber + 1) {
+            return CommandResultFactory.createUnsuccessfulCommandResult(
                     new Exception("Too much arguments")
-                );
-            }
+            );
+        }
+        if (cmd.getArgs().length == fileArgNumber + 1) {
             try {
-                input =  FileUtils.readFileToString(new File(cmd.getArgs()[1]), (String) null);
+                input =  FileUtils.readFileToString(new File(cmd.getArgs()[fileArgNumber]), (String) null);
             } catch (final IOException e) {
                 return CommandResultFactory.createUnsuccessfulCommandResult(e);
             }
@@ -63,7 +68,7 @@ class GrepCommandUnit implements CommandUnit {
                 return CommandResultFactory.createUnsuccessfulCommandResult(e);
             }
         }
-        String pattern = cmd.getOptionValue("regex");
+        String pattern = hasRegexp ? cmd.getOptionValue("regex") : cmd.getArgs()[1];
         if (cmd.hasOption("word-regexp")) {
            pattern = "\\b" + pattern + "\\b";
         }
