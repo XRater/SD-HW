@@ -1,0 +1,30 @@
+package spbau.xrater.interpretation.commands.commandUnits;
+
+import spbau.xrater.interpretation.commands.commandResult.CommandResult;
+import spbau.xrater.interpretation.commands.commandResult.CommandResultFactory;
+
+import java.util.List;
+
+/**
+ * Exits from the CLI
+ */
+class ExitCommandUnit implements CommandUnit {
+
+    ExitCommandUnit(final List<String> args) {
+        if (args.isEmpty() || !args.get(0).equals("exit")) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public CommandResult execute(final String input) {
+        System.exit(0);
+        return CommandResultFactory.createSuccessfulCommandResult(null);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof ExitCommandUnit;
+    }
+
+}
