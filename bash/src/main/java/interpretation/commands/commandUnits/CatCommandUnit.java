@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Returns file content
+ */
 class CatCommandUnit implements CommandUnit {
 
     private final String file;

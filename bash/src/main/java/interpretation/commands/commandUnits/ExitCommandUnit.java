@@ -5,6 +5,9 @@ import interpretation.commands.commandResult.CommandResultFactory;
 
 import java.util.List;
 
+/**
+ * Exits from the CLI
+ */
 class ExitCommandUnit implements CommandUnit {
 
     ExitCommandUnit(final List<String> args) {

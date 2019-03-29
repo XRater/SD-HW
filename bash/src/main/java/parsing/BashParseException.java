@@ -6,11 +6,8 @@ package parsing;
 @SuppressWarnings("WeakerAccess")
 public class BashParseException extends Exception {
 
-    public BashParseException() {
-        super();
-    }
-
     public BashParseException(final String message) {
         super(message);
     }
+
 }

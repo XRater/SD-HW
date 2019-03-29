@@ -6,6 +6,9 @@ import interpretation.commands.commandResult.CommandResultFactory;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Prints arguments splitted with space character
+ */
 class EchoCommandUnit implements CommandUnit {
 
     private final List<String> args;
@@ -19,7 +22,7 @@ class EchoCommandUnit implements CommandUnit {
 
     @Override
     public CommandResult execute(final String input) {
-        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args) + '\n');
+        return CommandResultFactory.createSuccessfulCommandResult(String.join(" ", args) + System.lineSeparator());
     }
 
     @Override

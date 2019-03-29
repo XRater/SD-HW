@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,8 +44,12 @@ class WcCommandUnit implements CommandUnit {
         } else {
             content = input == null ? "" : input;
         }
-        final long linesNumber = content.chars().filter(c -> c == '\n').count();
-        final long wordsNumber = content.split("\\s\\s*").length;
+        long linesNumber = Arrays.stream(content.split(System.lineSeparator())).count();
+        if (linesNumber == 0) {
+            linesNumber = 1;
+        }
+        final long wordsNumber = Arrays.stream(content.split("\\s"))
+                .filter( word -> !word.isEmpty() ).count();
         final long bytesNumber = content.length();
         return CommandResultFactory.createSuccessfulCommandResult(
                 linesNumber + " " + wordsNumber + " " + bytesNumber

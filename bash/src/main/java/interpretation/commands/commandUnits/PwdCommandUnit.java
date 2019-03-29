@@ -5,6 +5,9 @@ import interpretation.commands.commandResult.CommandResultFactory;
 
 import java.util.List;
 
+/**
+ * Returns current working directory
+ */
 class PwdCommandUnit implements CommandUnit {
 
     PwdCommandUnit(final List<String> args) {
