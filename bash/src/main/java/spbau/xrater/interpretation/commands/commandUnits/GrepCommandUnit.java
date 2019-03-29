@@ -1,8 +1,8 @@
-package interpretation.commands.commandUnits;
+package spbau.xrater.interpretation.commands.commandUnits;
 
-import interpretation.commands.commandResult.CommandResult;
-import interpretation.commands.commandResult.CommandResultFactory;
 import org.apache.commons.cli.*;
+import spbau.xrater.interpretation.commands.commandResult.CommandResult;
+import spbau.xrater.interpretation.commands.commandResult.CommandResultFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -46,11 +46,15 @@ class GrepCommandUnit implements CommandUnit {
         if (input == null) {
             input = "";
         }
+        String pattern = cmd.getOptionValue("regex");
+        if (cmd.hasOption("word-regexp")) {
+           pattern = "\\b" + pattern + "\\b";
+        }
         final Pattern p;
         if (cmd.hasOption("ignore-case")) {
-            p = Pattern.compile(cmd.getOptionValue("regex"), Pattern.CASE_INSENSITIVE);
+            p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         } else {
-            p = Pattern.compile(cmd.getOptionValue("regex"));
+            p = Pattern.compile(pattern);
         }
         final int printRange = cmd.hasOption("after-context")
                 ? Integer.parseInt(cmd.getOptionValue("after-context")) : 0;
